@@ -39,7 +39,7 @@ CREATE TABLE "Posts" (
   "image_url" varchar,
   "content" varchar,
   "approved" bit,
-  FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`),
+  FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
 );
 
 CREATE TABLE "Comments" (
