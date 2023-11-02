@@ -86,7 +86,7 @@ CREATE TABLE "Categories" (
 );
 
 INSERT INTO Categories ('label') VALUES ('News');
-INSERT INTO Tags ('label') VALUES ('JavaScript');
+INSERT INTO Tags ('label') VALUES ('SQL');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
 DELETE from posts
@@ -95,3 +95,5 @@ WHERE id == 1
 SELECT * from posts
 DELETE from Posts
 where id == 3
+
+SELECT * FROM tags
