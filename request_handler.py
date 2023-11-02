@@ -1,7 +1,7 @@
 from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from views import get_all_tags, get_single_tag
+from views import get_all_tags, get_single_tag, create_tag
 from views.user import create_user, login_user
 
 
@@ -76,12 +76,15 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        resource, _ = self.parse_url()
+        resource, _ = self.parse_url(self.path)
 
         if resource == 'login':
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+            
+        if resource == 'tags':
+            response = create_tag(post_body)
 
         self.wfile.write(response.encode())
 
