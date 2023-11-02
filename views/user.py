@@ -89,8 +89,9 @@ def get_all_users():
             u.username,
             u.password,
             u.profile_image_url,
-            u.create_on_date,
+            u.created_on,
             u.active
+        FROM users u
         """)
 
         # Initialize an empty list to hold all user representations
@@ -112,7 +113,7 @@ def get_all_users():
                 row['username'],
                 row['password'],
                 row['profile_image_url'],
-                row['created_on_date'],
+                row['created_on'],
                 row['active']
             )
 
@@ -139,9 +140,9 @@ def get_single_user(id):
             u.username,
             u.password,
             u.profile_image_url,
-            u.created_on_date,
+            u.created_on,
             u.active
-        FROM user u
+        FROM users u
         WHERE u.id = ?
         """, ( id, ))
 
@@ -158,7 +159,7 @@ def get_single_user(id):
             data['username'],
             data['password'],
             data['profile_image_url'],
-            data['created_on_date'],
+            data['created_on'],
             data['active']
             )
 
