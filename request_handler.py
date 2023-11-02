@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from views import get_all_tags, get_single_tag
 from views.user import create_user, login_user
-from views.post_requests import create_post, get_all_posts
+from views.post_requests import create_post, get_all_posts, get_single_post
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -68,7 +68,10 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = get_all_tags()
             if resource == "posts":
-                response = get_all_posts()
+                if id is not None:
+                    response = get_single_post(id)
+                else:
+                    response = get_all_posts()
             
         self.wfile.write(json.dumps(response). encode())
 
