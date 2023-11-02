@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 from views.user import create_user, login_user
+from views.category import create_category, get_all_categories, get_single_category, update_category, delete_category
 
 
 class HandleRequests(BaseHTTPRequestHandler):
