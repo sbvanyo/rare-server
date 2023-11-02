@@ -63,7 +63,9 @@ def create_user(user):
             user['email'],
             user['password'],
             user['bio'],
-            datetime.now()
+            datetime.now(),
+            # ADDED user['active'] attempting to debug hanging postman user update response
+            user['active']
         ))
 
         id = db_cursor.lastrowid
@@ -164,4 +166,40 @@ def get_single_user(id):
             )
 
         return user.__dict__
+
+def update_user(id, new_user):
+    """ Updates a User """
+    with sqlite3.connect('./db.sqlite3') as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE User
+            SET
+                first_name = ?,
+                last_name = ?,
+                email = ?,
+                bio = ?,
+                username = ?,
+                password = ?,
+                profile_image_url = ?,
+                created_on = ?,
+                active = ?
+        WHERE id = ?
+        """, (new_user['first_name'], new_user['last_name'],
+              new_user['email'], new_user['bio'],
+              new_user['username'], new_user['password'], new_user['profile_image_url'],
+              new_user['created_on'], new_user['active'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    # return value of this function
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
     
