@@ -87,7 +87,9 @@ CREATE TABLE "Categories" (
 
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('SQL');
+INSERT INTO PostTags ('post_id', 'tag_id') VALUES ('1', '3');
+INSERT INTO PostTags ('tag_id') VALUES ('3');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
 
-SELECT * FROM tags
+SELECT * FROM PostTags
