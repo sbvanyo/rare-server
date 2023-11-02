@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from views import get_all_tags, get_single_tag
 from views.user import create_user, login_user
-from views.post_requests import create_post
+from views.post_requests import create_post, get_all_posts
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -67,6 +67,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_tag(id)
                 else:
                     response = get_all_tags()
+            if resource == "posts":
+                response = get_all_posts()
             
         self.wfile.write(json.dumps(response). encode())
 
@@ -77,7 +79,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        resource, _ = self.parse_url()
+        resource, _ = self.parse_url(self.path)
 
         if resource == 'login':
             response = login_user(post_body)
