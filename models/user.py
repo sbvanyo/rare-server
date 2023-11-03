@@ -1,5 +1,4 @@
 """ User Module """
-
 class User():
     """ User Class """
     def __init__(self, id, first_name, last_name, email,

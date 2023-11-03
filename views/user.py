@@ -64,8 +64,7 @@ def create_user(user):
             user['password'],
             user['bio'],
             datetime.now(),
-            # ADDED user['active'] attempting to debug hanging postman user update response
-            user['active']
+            # user['active'] removed this and create_user functioned properly
         ))
 
         id = db_cursor.lastrowid
@@ -174,7 +173,7 @@ def update_user(id, new_user):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        UPDATE User
+        UPDATE Users
             SET
                 first_name = ?,
                 last_name = ?,
@@ -202,4 +201,14 @@ def update_user(id, new_user):
     else:
         # Forces 204 response by main module
         return True
+
+def delete_user(id):
+    """ Deletes a User """
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM users
+        WHERE id = ?
+        """, (id, ))
     

@@ -2,10 +2,11 @@
 from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from views import get_all_tags, get_single_tag
-from views import (create_user, login_user, get_all_users,
-get_single_user, update_user)
-
+from views.user import (create_user, login_user, get_all_users,
+                        get_single_user, update_user, delete_user)
+from views.tags import get_all_tags, get_single_tag
+from views.comments import (get_all_comments, get_single_comment, create_comment,
+                            delete_comment, update_comment)
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
@@ -67,15 +68,18 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_user(id)
                 else:
                     response = get_all_users()
-
             if resource == "tags":
                 if id is not None:
                     response = get_single_tag(id)
                 else:
                     response = get_all_tags()
+            if resource == 'comment':
+                if id is not None:
+                    response = get_single_comment(id)
+                else:
+                    response = get_all_comments()
 
         self.wfile.write(json.dumps(response). encode())
-
 
     def do_POST(self):
         """Make a post request to the server"""
@@ -89,6 +93,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'comment':
+            new_comment = create_comment(post_body)
+            self.wfile.write(json.dumps(new_comment).encode())
 
         self.wfile.write(response.encode())
 
@@ -107,24 +114,29 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "users":
             # will return either True or False from `update_user`
             success = update_user(id, post_body)
-            # rest of the elif's
-            # handle the value of success
-            if success:
-                self._set_headers(204)
-            else:
-                self._set_headers(404)
-            # ADDED lines 117 through 121 for debugging
-            response = {'success': success}
-            self.wfile.write(json.dumps(response).encode())
 
+        if resource == "comment":
+            success = update_comment(id, post_body)
+
+        if success:
+            self._set_headers(204)
         else:
-            self._set_headers(400)
-            # self.wfile.write("".encode())
+            self._set_headers(404)
+
+        self.wfile.write("".encode())
 
     def do_DELETE(self):
         """Handle DELETE Requests"""
-        pass
+        self._set_headers(204)
+        (resource, id) = self.parse_url(self.path)
 
+        if resource == "users":
+            delete_user(id)
+
+        if resource == "comment":
+            delete_comment(id)
+
+        self.wfile.write("".encode())
 
 def main():
     """Starts the server on port 8088 using the HandleRequests class
