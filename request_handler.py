@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from views import get_all_tags, get_single_tag
 from views.user import create_user, login_user
-from views.post_requests import create_post, get_all_posts, get_single_post, delete_post
+from views.post_requests import create_post, get_all_posts, get_single_post, delete_post, update_post
 from views.comments import get_all_comments, get_single_comment, create_comment, delete_comment, update_comment
 
 
@@ -115,6 +115,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "comment":
             success = update_comment(id, post_body)
+        if resource == "posts":
+            success = update_post(id, post_body)
 
         if success:
             self._set_headers(204)
