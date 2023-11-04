@@ -56,12 +56,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         """Handle Get requests to the server"""
         self._set_headers(200)
         response = {}
-        
+
         parsed = self.parse_url(self.path)
-        
+
         if '?' not in self.path:
             ( resource, id ) = parsed
-            
+
             if resource == "tags":
                 if id is not None:
                     response = get_single_tag(id)
@@ -72,7 +72,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_post(id)
                 else:
                     response = get_all_posts()
-            
+
         self.wfile.write(json.dumps(response). encode())
 
 
