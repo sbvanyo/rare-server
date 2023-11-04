@@ -89,5 +89,9 @@ INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('SQL');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
-
+SELECT * FROM Users
+WHERE id = 2
 SELECT * FROM tags
+
+
+INSERT INTO Categories ('label') VALUES ('Obituaries');
