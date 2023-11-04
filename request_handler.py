@@ -7,6 +7,11 @@ from views.user import (create_user, login_user, get_all_users,
 from views.tags import get_all_tags, get_single_tag
 from views.comments import (get_all_comments, get_single_comment, create_comment,
                             delete_comment, update_comment)
+from views.category import (create_category, get_all_categories, get_single_category,
+                            update_category, delete_category)
+
+
+
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
@@ -73,6 +78,12 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_tag(id)
                 else:
                     response = get_all_tags()
+                    
+            if resource == "categories":
+                if id is not None:
+                    response = get_single_category(id)
+                else:
+                    response = get_all_categories()
             if resource == 'comment':
                 if id is not None:
                     response = get_single_comment(id)
@@ -93,6 +104,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'categories':
+            response = create_category(post_body)
         if resource == 'comment':
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
@@ -117,6 +130,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "comment":
             success = update_comment(id, post_body)
+        if resource == "categories":
+            success = update_category(id, post_body)
+            
 
         if success:
             self._set_headers(204)
@@ -135,6 +151,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "comment":
             delete_comment(id)
+        if resource == "categories":
+            delete_category(id)
+            
 
         self.wfile.write("".encode())
 

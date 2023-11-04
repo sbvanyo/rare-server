@@ -92,3 +92,6 @@ INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.c
 SELECT * FROM Users
 WHERE id = 2
 SELECT * FROM tags
+
+
+INSERT INTO Categories ('label') VALUES ('Obituaries');
