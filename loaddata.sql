@@ -87,11 +87,14 @@ CREATE TABLE "Categories" (
 
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('SQL');
+INSERT INTO PostTags ('post_id', 'tag_id') VALUES ('1', '3');
+INSERT INTO PostTags ('tag_id') VALUES ('3');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
 DELETE from posts
 WHERE id == 1
 
+SELECT * FROM PostTags
 SELECT * from posts
 DELETE from Posts
 where id == 3

@@ -2,7 +2,8 @@
 from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from views import get_all_tags, get_single_tag
+from views import get_all_tags, get_single_tag, create_tag
+from views import get_all_post_tags, get_single_post_tag, add_tag_to_post, remove_tag_from_post
 from views.post_requests import create_post, get_all_posts, get_single_post, delete_post, update_post
 from views.user import (create_user, login_user, get_all_users,
                         get_single_user, update_user, delete_user)
@@ -79,6 +80,12 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_tag(id)
                 else:
                     response = get_all_tags()
+                    
+            if resource == "posttags":
+                if id is not None:
+                    response = get_single_post_tag(id)
+                else:
+                    response = get_all_post_tags()
             if resource == "posts":
                 if id is not None:
                     response = get_single_post(id)
@@ -111,6 +118,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'tags':
+            response = create_tag(post_body)
+        if resource == 'post_tags':
+            response == add_tag_to_post(post_body)
         if resource == 'posts':
             resource = create_post(post_body)
         if resource == 'categories':
@@ -170,6 +181,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_comment(id)
         if resource == "categories":
             delete_category(id)
+            
+        if resource == "post_tags":
+            remove_tag_from_post(id)
             
 
         self.wfile.write("".encode())
