@@ -1,6 +1,8 @@
+""" User View """
 import sqlite3
 import json
 from datetime import datetime
+from models import User
 
 def login_user(user):
     """Checks for the user in the database
@@ -9,7 +11,8 @@ def login_user(user):
         user (dict): Contains the username and password of the user trying to login
 
     Returns:
-        json string: If the user was found will return valid boolean of True and the user's id as the token
+        json string: If the user was found will return valid boolean of True 
+                     and the user's id as the token
                      If the user was not found will return valid boolean False
     """
     with sqlite3.connect('./db.sqlite3') as conn:
@@ -60,7 +63,8 @@ def create_user(user):
             user['email'],
             user['password'],
             user['bio'],
-            datetime.now()
+            datetime.now(),
+            # user['active'] removed this and create_user functioned properly
         ))
 
         id = db_cursor.lastrowid
@@ -69,3 +73,141 @@ def create_user(user):
             'token': id,
             'valid': True
         })
+
+def get_all_users():
+    """ Gets All Users """
+    with sqlite3.connect('./db.sqlite3') as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,            
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
+        FROM users u
+        """)
+
+        # Initialize an empty list to hold all user representations
+        users = []
+
+        # Convert rows of data into a Python list
+        dataset = db_cursor.fetchall()
+
+        # Iterate list of data returned from database
+        for row in dataset:
+
+            # Create a user instance from the current row
+            user = User(
+                row['id'],
+                row['first_name'],
+                row['last_name'],
+                row['email'],
+                row['bio'],
+                row['username'],
+                row['password'],
+                row['profile_image_url'],
+                row['created_on'],
+                row['active']
+            )
+
+            # Add the dictionary representation of the user to the list
+            users.append(user.__dict__)
+
+    return users
+
+def get_single_user(id):
+    """ Returns a Single User """
+    with sqlite3.connect('./db.sqlite3') as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
+        FROM users u
+        WHERE u.id = ?
+        """, ( id, ))
+
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create a user instance from the current row
+        user = User(
+            data['id'],
+            data['first_name'],
+            data['last_name'],
+            data['email'],
+            data['bio'],
+            data['username'],
+            data['password'],
+            data['profile_image_url'],
+            data['created_on'],
+            data['active']
+            )
+
+        return user.__dict__
+
+def update_user(id, new_user):
+    """ Updates a User """
+    with sqlite3.connect('./db.sqlite3') as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Users
+            SET
+                first_name = ?,
+                last_name = ?,
+                email = ?,
+                bio = ?,
+                username = ?,
+                password = ?,
+                profile_image_url = ?,
+                created_on = ?,
+                active = ?
+        WHERE id = ?
+        """, (new_user['first_name'], new_user['last_name'],
+              new_user['email'], new_user['bio'],
+              new_user['username'], new_user['password'], new_user['profile_image_url'],
+              new_user['created_on'], new_user['active'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    # return value of this function
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
+
+def delete_user(id):
+    """ Deletes a User """
+    with sqlite3.connect('./db.sqlite3') as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        DELETE FROM users
+        WHERE id = ?
+        """, (id, ))
+    
