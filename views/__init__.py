@@ -1,4 +1,5 @@
 """ Views Package Module """
+from .post_requests import create_post, get_all_posts, get_single_post, delete_post, update_post
 from .user import (login_user, create_user, get_all_users,
                    get_single_user, update_user, delete_user)
 from .comments import (get_all_comments, get_single_comment, create_comment, delete_comment)

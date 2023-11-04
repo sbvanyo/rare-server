@@ -2,9 +2,10 @@
 from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+from views import get_all_tags, get_single_tag
+from views.post_requests import create_post, get_all_posts, get_single_post, delete_post, update_post
 from views.user import (create_user, login_user, get_all_users,
                         get_single_user, update_user, delete_user)
-from views.tags import get_all_tags, get_single_tag
 from views.comments import (get_all_comments, get_single_comment, create_comment,
                             delete_comment, update_comment)
 from views.category import (create_category, get_all_categories, get_single_category,
@@ -78,6 +79,12 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_tag(id)
                 else:
                     response = get_all_tags()
+            if resource == "posts":
+                if id is not None:
+                    response = get_single_post(id)
+                else:
+                    response = get_all_posts()
+
                     
             if resource == "categories":
                 if id is not None:
@@ -104,11 +111,12 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'posts':
+            resource = create_post(post_body)
         if resource == 'categories':
             response = create_category(post_body)
         if resource == 'comment':
-            new_comment = create_comment(post_body)
-            self.wfile.write(json.dumps(new_comment).encode())
+            response = create_comment(post_body)
 
         self.wfile.write(response.encode())
 
@@ -117,12 +125,17 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
-
+        
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
         # set default value of success
         success = False
+
+        if resource == "comment":
+            success = update_comment(id, post_body)
+        if resource == "posts":
+            success = update_post(id, post_body)
 
         if resource == "users":
             # will return either True or False from `update_user`
@@ -146,6 +159,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         self._set_headers(204)
         (resource, id) = self.parse_url(self.path)
 
+        if resource == "comment":
+            delete_comment(id)
+        if resource == "posts":
+            delete_post(id)
         if resource == "users":
             delete_user(id)
 
