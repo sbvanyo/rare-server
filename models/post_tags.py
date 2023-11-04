@@ -1,3 +1,4 @@
+""" Post Tags Module """
 class Post_tags():
     """postTags class"""
 

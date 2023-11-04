@@ -96,4 +96,9 @@ SELECT * from posts
 DELETE from Posts
 where id == 3
 
+SELECT * FROM Users
+WHERE id = 2
 SELECT * FROM tags
+
+
+INSERT INTO Categories ('label') VALUES ('Obituaries');

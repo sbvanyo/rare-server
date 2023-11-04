@@ -1,3 +1,4 @@
+""" Comments Module """
 class Comment():
     """CLASS COMMENTS"""
     def __init__(self, id, author_id, post_id, content):
