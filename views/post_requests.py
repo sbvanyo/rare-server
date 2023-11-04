@@ -2,6 +2,17 @@ import sqlite3
 import json
 from models import Post
 
+def delete_post(id):
+    """docstring"""
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE 
+        FROM Posts
+        WHERE id = ?
+        """, (id, ))
+
 def get_single_post(id):
     """docstring"""
     with sqlite3.connect("./db.sqlite3") as conn:
@@ -27,7 +38,7 @@ def get_single_post(id):
         # Load the single result into memory
         data = db_cursor.fetchone()
 
-        # Create an animal instance from the current row
+        # Create an post instance from the current row
         post = Post(data['id'],
                      data['user_id'],
                      data['category_id'],
@@ -62,7 +73,7 @@ def get_all_posts():
         FROM Posts p
         """)
 
-        # Initialize an empty list to hold all animal representations
+        # Initialize an empty list to hold all post representations
         posts = []
 
         # Convert rows of data into a Python list
@@ -71,11 +82,11 @@ def get_all_posts():
         # Iterate list of data returned from database
         for row in dataset:
 
-            # Create an animal instance from the current row
-            post = Post(row['user_id'], row['user_id'], row['category_id'], row['title'], row['publication_date'],
+            # Create an post instance from the current row
+            post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row['publication_date'],
                             row['image_url'], row['content'], row['approved'])
 
-            # Add the dictionary representation of the animal to the list
+            # Add the dictionary representation of the post to the list
             posts.append(post.__dict__)
 
     return posts
