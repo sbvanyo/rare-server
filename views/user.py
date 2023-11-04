@@ -204,9 +204,8 @@ def update_user(id, new_user):
 
 def delete_user(id):
     """ Deletes a User """
-    with sqlite3.connect("./db.sqlite3") as conn:
+    with sqlite3.connect('./db.sqlite3') as conn:
         db_cursor = conn.cursor()
-
         db_cursor.execute("""
         DELETE FROM users
         WHERE id = ?
