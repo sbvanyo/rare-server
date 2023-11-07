@@ -103,5 +103,19 @@ SELECT * FROM Users
 WHERE id = 2
 SELECT * FROM tags
 
+SELECT
+            p.id,
+            p.user_id,
+            p.category_id,
+            p.title,
+            p.publication_date,
+            p.image_url,
+            p.content,
+            p.approved,
+            u.first_name,
+            u.last_name
+        FROM Posts p
+        JOIN Users u
+        ON p.user_id = u.id
 
 INSERT INTO Categories ('label') VALUES ('Obituaries');
