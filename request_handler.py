@@ -8,10 +8,9 @@ from views.post_requests import create_post, get_all_posts, get_single_post, del
 from views.user import (create_user, login_user, get_all_users,
                         get_single_user, update_user, delete_user)
 from views.comments import (get_all_comments, get_single_comment, create_comment,
-                            delete_comment, update_comment)
+                            delete_comment, update_comment, get_comments_for_post)
 from views.category import (create_category, get_all_categories, get_single_category,
                             update_category, delete_category)
-
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -68,7 +67,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         parsed = self.parse_url(self.path)
 
         if '?' not in self.path:
-            ( resource, id ) = parsed
+            (resource, id) = parsed
 
             if resource == "users":
                 if id is not None:
@@ -80,7 +79,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_tag(id)
                 else:
                     response = get_all_tags()
-                    
+
             if resource == "posttags":
                 if id is not None:
                     response = get_single_post_tag(id)
@@ -92,7 +91,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = get_all_posts()
 
-                    
             if resource == "categories":
                 if id is not None:
                     response = get_single_category(id)
@@ -100,7 +98,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_all_categories()
             if resource == 'comment':
                 if id is not None:
-                    response = get_single_comment(id)
+                    response = get_comments_for_post(id)
                 else:
                     response = get_all_comments()
 
@@ -136,7 +134,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
-        
+
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
@@ -156,7 +154,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_comment(id, post_body)
         if resource == "categories":
             success = update_category(id, post_body)
-            
 
         if success:
             self._set_headers(204)
@@ -181,12 +178,12 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_comment(id)
         if resource == "categories":
             delete_category(id)
-            
+
         if resource == "post_tags":
             remove_tag_from_post(id)
-            
 
         self.wfile.write("".encode())
+
 
 def main():
     """Starts the server on port 8088 using the HandleRequests class
