@@ -7,7 +7,7 @@ from views import get_all_post_tags, get_single_post_tag, add_tag_to_post, remov
 from views.post_requests import create_post, get_all_posts, get_single_post, delete_post, update_post
 from views.user import (create_user, login_user, get_all_users,
                         get_single_user, update_user, delete_user)
-from views.comments import (get_all_comments, get_single_comment, create_comment,
+from views.comments import (get_all_comments, create_comment,
                             delete_comment, update_comment, get_comments_for_post)
 from views.category import (create_category, get_all_categories, get_single_category,
                             update_category, delete_category)
@@ -127,7 +127,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == 'comment':
             response = create_comment(post_body)
 
-        self.wfile.write(response.encode())
+        self.wfile.write(json.dumps(response).encode())
 
     def do_PUT(self):
         """Handles PUT requests to the server"""
