@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Post
+from models import Post, User
 
 def update_post(id, new_post):
     """docstrings"""
@@ -67,8 +67,20 @@ def get_single_post(id):
             p.publication_date,
             p.image_url,
             p.content,
-            p.approved
+            p.approved,
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
         FROM Posts p
+        JOIN Users u
+        ON p.user_id = u.id
         WHERE p.id = ?
         """, ( id, ))
 
@@ -84,7 +96,11 @@ def get_single_post(id):
                      data['image_url'],
                      data['content'],
                      data['approved'])
-
+        
+        user = User(data['id'], data['first_name'], data['last_name'], data['email'], data['bio'], data['username'], data['password'], data['profile_image_url'], data['created_on'], data['active'])
+        
+        post.user = user.__dict__
+        
         return post.__dict__
 
 def get_all_posts():
@@ -106,8 +122,20 @@ def get_all_posts():
             p.publication_date,
             p.image_url,
             p.content,
-            p.approved
+            p.approved,
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
         FROM Posts p
+        JOIN Users u
+        ON p.user_id = u.id
         """)
 
         # Initialize an empty list to hold all post representations
@@ -122,6 +150,10 @@ def get_all_posts():
             # Create an post instance from the current row
             post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row['publication_date'],
                             row['image_url'], row['content'], row['approved'])
+            
+            user = User(row['id'], row['first_name'], row['last_name'], row['email'], row['bio'], row['username'], row['password'], row['profile_image_url'], row['created_on'], row['active'])
+            
+            post.user = user.__dict__
 
             # Add the dictionary representation of the post to the list
             posts.append(post.__dict__)
