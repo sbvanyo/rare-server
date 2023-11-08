@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Post, User
+from models import Post, User, Tags
 
 def update_post(id, new_post):
     """docstrings"""
@@ -55,6 +55,7 @@ def get_single_post(id):
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
+        db_cursor2 = conn.cursor()
 
         # Use a ? parameter to inject a variable's value
         # into the SQL statement.
@@ -83,10 +84,28 @@ def get_single_post(id):
         ON p.user_id = u.id
         WHERE p.id = ?
         """, ( id, ))
+        
+        db_cursor2.execute("""
+        SELECT
+            pt.id,
+            pt.post_id,
+            pt.tag_id,
+            t.id,
+            t.label
+            
+        FROM PostTags pt
+        JOIN tags t
+            on pt.tag_id = t.id
+        WHERE pt.post_id = ?
+        """, ( id, ))
 
         # Load the single result into memory
+        tags = []
         data = db_cursor.fetchone()
-
+        dataset = db_cursor2.fetchall()
+        for row in dataset:
+            tag = Tags(row['id'], row['label'])
+            tags.append(tag.__dict__)
         # Create an post instance from the current row
         post = Post(data['id'],
                      data['user_id'],
@@ -100,6 +119,7 @@ def get_single_post(id):
         user = User(data['id'], data['first_name'], data['last_name'], data['email'], data['bio'], data['username'], data['password'], data['profile_image_url'], data['created_on'], data['active'])
         
         post.user = user.__dict__
+        post.tags = tags
         
         return post.__dict__
 
