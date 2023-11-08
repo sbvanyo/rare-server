@@ -127,7 +127,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == 'comment':
             response = create_comment(post_body)
 
-        self.wfile.write(response.encode())
+        self.wfile.write(json.dumps(response).encode())
 
     def do_PUT(self):
         """Handles PUT requests to the server"""
