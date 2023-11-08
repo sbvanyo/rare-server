@@ -4,14 +4,14 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from views import get_all_tags, get_single_tag, create_tag
 from views import get_all_post_tags, get_single_post_tag, add_tag_to_post, remove_tag_from_post
-from views.post_requests import create_post, get_all_posts, get_single_post, delete_post, update_post
+from views.post_requests import (create_post, get_all_posts, get_single_post,
+                                 delete_post, update_post)
 from views.user import (create_user, login_user, get_all_users,
                         get_single_user, update_user, delete_user)
 from views.comments import (get_all_comments, create_comment,
                             delete_comment, update_comment, get_comments_for_post)
 from views.category import (create_category, get_all_categories, get_single_category,
                             update_category, delete_category)
-
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
