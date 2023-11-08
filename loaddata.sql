@@ -119,3 +119,22 @@ SELECT
         ON p.user_id = u.id
 
 INSERT INTO Categories ('label') VALUES ('Obituaries');
+
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('David', 'Poole', 'dbpoole7@gmail.com', 'Member of Alpha Q', 'dbpoole', 'password', NULL, '2023-11-01 18:59:07.001179', 1);
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('Mason', 'Austin', 'mason47austin@gmail.com', 'Member of Alpha Q', 'crazymace', 'password', NULL, '2023-11-01 20:38:37.110268', 1);
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('Michael', 'Brantley', 'mbrantley@gmail.com', 'Member of Alpha Q', 'candyeater', 'password', NULL, '2023-11-01 20:46:41.040093', 1);
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('Kyle', 'Berry', 'Kberry@gmail.com', 'Member of Alpha Q', 'HomeDepot', 'password', NULL, '2023-11-01 20:47:16.078988', 1);
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('Stacey', 'Vanyo', 'svanyo@gmail.com', 'Member of Alpha Q', 'Code Mom', 'password', NULL, '2023-11-01 20:47:50.292648', 1);
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('3rd Test', 'Saturday', 'test@gmail.com', 'Member of Alpha Q', 'Test Member', 'password', NULL, '2023-11-01 20:47:50.292648', 1);
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('Saturday', 'Test', 'test@gmail.com', 'Member of Alpha Q', 'Test Member', 'password', NULL, '2023-11-01 20:47:50.292648', 1);
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('David', 'Poole', 'dbpoole7@gmail.com', 'Member of E23 Alpha Q', 'dbpoole', 'alphaqpw', NULL, '2023-11-04 13:37:02.539087', 1);
+INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
+VALUES ('MVP Test Member', 'Delete me', 'test@gmail.com', 'Member of Alpha Q', 'Saturday Create Member SUCCESS', '123Delete', NULL, '2023-11-05 17:33:18.021384', 1);

@@ -3,6 +3,7 @@ import sqlite3
 import json
 from models import Comment
 
+
 def get_all_comments():
     """GET ALL COMMENTS"""
     with sqlite3.connect("./db.sqlite3") as conn:
@@ -23,11 +24,13 @@ def get_all_comments():
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            comment = Comment(row['id'], row['author_id'], row['post_id'], row['content'])
+            comment = Comment(row['id'], row['author_id'],
+                              row['post_id'], row['content'])
 
             comments.append(comment.__dict__)
 
     return comments
+
 
 def get_single_comment(id):
     """GET SINGLE COMMENT"""
@@ -42,7 +45,7 @@ def get_single_comment(id):
             c.content
         FROM comment c
         WHERE c.id = ?
-        """, ( id, ))
+        """, (id, ))
         data = db_cursor.fetchone()
 
         comment = Comment(
@@ -71,6 +74,7 @@ def create_comment(new_comment):
 
     return new_comment
 
+
 def delete_comment(id):
     """DELETE COMMENT"""
     with sqlite3.connect("./db.sqlite3") as conn:
@@ -80,6 +84,7 @@ def delete_comment(id):
         DELETE FROM Comments
         WHERE id = ?
         """, (id, ))
+
 
 def update_comment(id, new_comment):
     """UPDATE COMMENT"""
@@ -101,3 +106,33 @@ def update_comment(id, new_comment):
         return False
     else:
         return True
+
+
+def get_comments_for_post(post_id):
+    """GET COMMENTS FOR A SPECIFIC POST"""
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            c.id,
+            c.author_id,
+            c.post_id,
+            c.content
+        FROM Comments c
+        INNER JOIN Posts p ON c.post_id = p.id
+        WHERE p.id = ?
+        """, (post_id, ))
+
+        comments = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            comment = Comment(row['id'], row['author_id'],
+                              row['post_id'], row['content'])
+
+            comments.append(comment.__dict__)
+
+    return comments
