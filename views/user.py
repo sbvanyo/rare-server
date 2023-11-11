@@ -2,7 +2,13 @@
 import sqlite3
 import json
 from datetime import datetime
+# from jwt import decode, InvalidTokenError
 from models import User
+
+# Assumes token contains unique user id info
+# To only be used if local storage not used for user id information:
+# def get_user_id_from_token(token):
+#     return token
 
 def login_user(user):
     """Checks for the user in the database
@@ -123,8 +129,19 @@ def get_all_users():
 
     return users
 
-def get_single_user(id):
+# def decode_token(token):
+#     """ Decodes the user token """
+#     try:
+#         decoded = decode(token, 'your_secret_key', algorithms=['HS256'])
+#         return decoded.get('id')
+#     except InvalidTokenError:
+#         return None
+
+def get_single_user(token):
     """ Returns a Single User """
+    # Assuming token is a string containing the user's ID
+    user_id = int(token)
+
     with sqlite3.connect('./db.sqlite3') as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
@@ -145,26 +162,29 @@ def get_single_user(id):
             u.active
         FROM users u
         WHERE u.id = ?
-        """, ( id, ))
+        """, (user_id, ))
 
         # Load the single result into memory
         data = db_cursor.fetchone()
 
         # Create a user instance from the current row
-        user = User(
-            data['id'],
-            data['first_name'],
-            data['last_name'],
-            data['email'],
-            data['bio'],
-            data['username'],
-            data['password'],
-            data['profile_image_url'],
-            data['created_on'],
-            data['active']
+        if data:
+            user = User(
+                data['id'],
+                data['first_name'],
+                data['last_name'],
+                data['email'],
+                data['bio'],
+                data['username'],
+                data['password'],
+                data['profile_image_url'],
+                data['created_on'],
+                data['active']
             )
 
-        return user.__dict__
+            return user.__dict__
+        else:
+            return None
 
 def update_user(id, new_user):
     """ Updates a User """
