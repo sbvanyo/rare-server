@@ -138,3 +138,6 @@ INSERT INTO USERS (first_name, last_name, email, bio, username, password, profil
 VALUES ('David', 'Poole', 'dbpoole7@gmail.com', 'Member of E23 Alpha Q', 'dbpoole', 'alphaqpw', NULL, '2023-11-04 13:37:02.539087', 1);
 INSERT INTO USERS (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active)
 VALUES ('MVP Test Member', 'Delete me', 'test@gmail.com', 'Member of Alpha Q', 'Saturday Create Member SUCCESS', '123Delete', NULL, '2023-11-05 17:33:18.021384', 1);
+
+
+

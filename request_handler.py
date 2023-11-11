@@ -79,8 +79,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_tag(id)
                 else:
                     response = get_all_tags()
-
-            if resource == "posttags":
+                    
+            if resource == "post_tags":
                 if id is not None:
                     response = get_single_post_tag(id)
                 else:

@@ -1,3 +1,4 @@
+"""Tags Module"""
 import sqlite3
 from models import Tags
 
@@ -6,22 +7,22 @@ def get_all_tags():
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-        
+
         db_cursor.execute("""
         SELECT
             t.id,
             t.label
         FROM tags t
         """)
-        
+
         tags = []
-        
+
         dataset = db_cursor.fetchall()
-        
+
         for row in dataset:
             tag = Tags(row['id'], row['label'])
             tags.append(tag.__dict__)
-            
+
     return tags
 
 def get_single_tag(id):
@@ -29,7 +30,7 @@ def get_single_tag(id):
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-        
+
         db_cursor.execute("""
         SELECT
             t.id,
@@ -37,28 +38,27 @@ def get_single_tag(id):
         FROM tags t
         WHERE t.id = ?
         """, (id, ))
-        
+
         data = db_cursor.fetchone()
-        
+
         tag = Tags(data['id'], data['label'])
-        
+
     return tag.__dict__
 
 def create_tag(new_tag):
     """create new tag"""
     with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
-        
+
         db_cursor.execute("""
         INSERT INTO Tags
             (label)
         VALUES
             (?);
         """, (new_tag['label'], ))
-        
-        id = db_cursor.lastrowid
-        
-        new_tag['id'] = id
-        
-    return new_tag
 
+        id = db_cursor.lastrowid
+
+        new_tag['id'] = id
+
+    return new_tag
