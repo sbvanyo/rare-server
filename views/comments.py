@@ -116,12 +116,23 @@ def get_comments_for_post(post_id):
 
         db_cursor.execute("""
         SELECT
-            c.id,
+            c.id as comment_id,
             c.author_id,
             c.post_id,
-            c.content
+            c.content,
+            u.id as user_id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
         FROM Comments c
         INNER JOIN Posts p ON c.post_id = p.id
+        LEFT JOIN Users u ON c.author_id = u.id
         WHERE p.id = ?
         """, (post_id, ))
 
@@ -130,9 +141,25 @@ def get_comments_for_post(post_id):
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            comment = Comment(row['id'], row['author_id'],
-                              row['post_id'], row['content'])
+            comment_data = {
+                'comment_id': row['comment_id'],
+                'author_id': row['author_id'],
+                'post_id': row['post_id'],
+                'content': row['content'],
+                'user': {
+                    'id': row['user_id'],
+                    'first_name': row['first_name'],
+                    'last_name': row['last_name'],
+                    'email': row['email'],
+                    'bio': row['bio'],
+                    'username': row['username'],
+                    'password': row['password'],
+                    'profile_image_url': row['profile_image_url'],
+                    'created_on': row['created_on'],
+                    'active': row['active']
+                }
+            }
 
-            comments.append(comment.__dict__)
+            comments.append(comment_data)
 
     return comments
